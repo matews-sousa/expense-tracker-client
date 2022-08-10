@@ -44,7 +44,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       email,
       password,
     });
-    fetchUser();
+    await fetchUser();
   };
 
   const logout = async () => {
