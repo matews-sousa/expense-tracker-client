@@ -40,11 +40,11 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const login = async (email: string, password: string) => {
-    await api.post("/login", {
+    const { data } = await api.post("/login", {
       email,
       password,
     });
-    await fetchUser();
+    setCurrentUser(data.user);
   };
 
   const logout = async () => {
