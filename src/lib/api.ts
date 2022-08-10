@@ -8,6 +8,7 @@ const api = axios.create({
   headers: {
     "Content-Type": "application/json",
     Accept: "application/json",
+    "Set-Cookie": "HttpOnly;Secure;SameSite=Strict",
   },
   withCredentials: true,
 });
