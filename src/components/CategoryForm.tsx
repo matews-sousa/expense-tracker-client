@@ -1,4 +1,5 @@
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import TextField from "./TextField";
 
 type FormValues = {
@@ -13,7 +14,6 @@ interface Props {
 }
 
 const CategoryForm = ({ initialValues, mutation }: Props) => {
-  console.log(initialValues);
   const {
     register,
     handleSubmit,
@@ -21,10 +21,11 @@ const CategoryForm = ({ initialValues, mutation }: Props) => {
   } = useForm<FormValues>({
     defaultValues: initialValues,
   });
+  const navigate = useNavigate();
 
   const onSubmit = async (data: FormValues) => {
-    console.log(data);
     await mutation.mutateAsync({ id: initialValues?.id, ...data });
+    navigate("/categories");
   };
 
   return (

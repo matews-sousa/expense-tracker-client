@@ -2,10 +2,11 @@ import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import CategoryForm from "../components/CategoryForm";
 import Container from "../components/Container";
+import useAxios from "../hooks/useAxios";
 import useCategory from "../hooks/useCategory";
-import api from "../lib/api";
 
 const EditCategory = () => {
+  const api = useAxios();
   const { updateCategory } = useCategory();
   const { id } = useParams();
   const { data: category, isLoading } = useQuery(["category", id], async () => {

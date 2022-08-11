@@ -1,8 +1,6 @@
-import { useQuery } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import api from "../lib/api";
-import { ICategory } from "../types/ITransaction";
+import useCategory from "../hooks/useCategory";
 import TextField from "./TextField";
 
 interface Props {
@@ -17,13 +15,7 @@ interface Props {
 }
 
 const TransactionForm = ({ initialValues, mutation }: Props) => {
-  const { data: categories } = useQuery<ICategory[]>(
-    ["categories"],
-    async () => {
-      const { data } = await api.get("/categories");
-      return data;
-    }
-  );
+  const { categories } = useCategory();
   const {
     register,
     handleSubmit,

@@ -1,19 +1,9 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthProvider";
-import api from "../lib/api";
 import { ICategory } from "../types/ITransaction";
+import useAxios from "./useAxios";
 
 const useCategory = () => {
-  const { authTokens, logout } = useAuth();
-  const navigate = useNavigate();
-  api.defaults.headers.common["Authorization"] = `Bearer ${authTokens?.access}`;
-  api.interceptors.response.use((response) => {
-    if (response.status === 401) {
-      logout();
-    }
-    return response;
-  });
+  const api = useAxios();
   const { data: categories, refetch } = useQuery<ICategory[]>(
     ["categories"],
     async () => {
@@ -28,7 +18,6 @@ const useCategory = () => {
     {
       onSuccess: () => {
         refetch();
-        navigate("/categories");
       },
     }
   );
@@ -40,7 +29,6 @@ const useCategory = () => {
     {
       onSuccess: () => {
         refetch();
-        navigate("/categories");
       },
     }
   );

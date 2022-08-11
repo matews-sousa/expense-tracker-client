@@ -1,7 +1,9 @@
 import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
 import { useForm } from "react-hook-form";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import TextField from "../components/TextField";
+import baseURL from "../constants/baseURL";
 import { useAuth } from "../context/AuthProvider";
 import api from "../lib/api";
 
@@ -20,7 +22,7 @@ const SignUp = () => {
   } = useForm<FormValues>();
   const mutation = useMutation(
     (newUser: { name: string; email: string; password: string }) => {
-      return api.post("/signup", newUser);
+      return axios.post(`${baseURL}/signup`, newUser);
     }
   );
   const navigate = useNavigate();

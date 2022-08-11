@@ -1,7 +1,8 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import api from "../lib/api";
 import jwtDecode from "jwt-decode";
+import axios from "axios";
+import baseURL from "../constants/baseURL";
 
 type AuthTokens = {
   access: string;
@@ -15,7 +16,9 @@ type User = {
 
 interface AuthContextProps {
   authTokens: AuthTokens | null;
+  setAuthTokens: (tokens: AuthTokens | null) => void;
   currentUser: User | null;
+  setCurrentUser: (user: User | null) => void;
   login: (email: string, password: string) => Promise<any>;
   logout: () => void;
 }
@@ -31,20 +34,17 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [authTokens, setAuthTokens] = useState<AuthTokens | null>(() =>
     tokens ? JSON.parse(tokens) : null
   );
-  const [currentUser, setCurrentUser] = useState<User | null>(() =>
-    tokens ? jwtDecode(JSON.parse(tokens).access) : null
-  );
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   const login = async (email: string, password: string) => {
     try {
-      const { data } = await api.post("/token", {
+      const { data } = await axios.post(`${baseURL}/token`, {
         email,
         password,
       });
       setAuthTokens(data);
-      console.log(jwtDecode(data.access));
       setCurrentUser(jwtDecode(data.access));
       localStorage.setItem("authTokens", JSON.stringify(data));
     } catch (error) {
@@ -59,41 +59,18 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     navigate("/login");
   };
 
-  const updateToken = async () => {
-    try {
-      const { data } = await api.post("/token/refresh", {
-        refresh: authTokens?.refresh,
-      });
-      setAuthTokens(data);
-      setCurrentUser(jwtDecode(data.access));
-      localStorage.setItem("authTokens", JSON.stringify(data));
-    } catch (error) {
-      logout();
-    }
-
-    if (loading) {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
-    if (loading) {
-      updateToken();
+    if (authTokens) {
+      setCurrentUser(jwtDecode(authTokens.access));
     }
-
-    const fourMinutes = 1000 * 60 * 4;
-    const interval = setInterval(() => {
-      if (authTokens) {
-        updateToken();
-      }
-    }, fourMinutes);
-
-    return () => clearInterval(interval);
+    setLoading(false);
   }, [authTokens, loading]);
 
   const value = {
     authTokens,
+    setAuthTokens,
     currentUser,
+    setCurrentUser,
     login,
     logout,
   };

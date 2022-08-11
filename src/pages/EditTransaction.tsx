@@ -2,10 +2,11 @@ import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import Container from "../components/Container";
 import TransactionForm from "../components/TransactionForm";
+import useAxios from "../hooks/useAxios";
 import useTransaction from "../hooks/useTransaction";
-import api from "../lib/api";
 
 const EditTransaction = () => {
+  const api = useAxios();
   const { editTransaction } = useTransaction();
   const { id } = useParams();
   const { data: transaction, isLoading } = useQuery(
