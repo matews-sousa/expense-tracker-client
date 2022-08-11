@@ -5,11 +5,12 @@ import { Link } from "react-router-dom";
 import Container from "../components/Container";
 import Modal from "../components/Modal";
 import useTransaction from "../hooks/useTransaction";
-import api from "../lib/api";
 import { ITransaction } from "../types/ITransaction";
 import dayjs from "dayjs";
+import useAxios from "../hooks/useAxios";
 
 const Transactions = () => {
+  const api = useAxios();
   const { transactions, refetch } = useTransaction();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedTransaction, setSelectedTransaction] =
