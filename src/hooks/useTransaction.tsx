@@ -17,17 +17,8 @@ const useTransaction = () => {
   const { data: transactions, refetch } = useQuery<ITransaction[]>(
     ["transactions"],
     async () => {
-      if (!authTokens) {
-        return [];
-      }
-      try {
-        const { data } = await api.get("/transactions");
-        return data;
-      } catch (error: any) {
-        if (error.response.statusText === "Unauthorized") {
-          logout();
-        }
-      }
+      const { data } = await api.get("/transactions");
+      return data;
     }
   );
 

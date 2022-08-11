@@ -7,11 +7,10 @@ import Modal from "../components/Modal";
 import useTransaction from "../hooks/useTransaction";
 import api from "../lib/api";
 import { ITransaction } from "../types/ITransaction";
-import * as dayjs from "dayjs";
+import dayjs from "dayjs";
 
 const Transactions = () => {
   const { transactions, refetch } = useTransaction();
-  console.log(transactions);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedTransaction, setSelectedTransaction] =
     useState<ITransaction | null>(null);
