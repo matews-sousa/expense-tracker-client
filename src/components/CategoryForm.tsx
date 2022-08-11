@@ -2,6 +2,7 @@ import { useForm } from "react-hook-form";
 import TextField from "./TextField";
 
 type FormValues = {
+  id?: number;
   name: string;
   type: "INCOME" | "EXPENSE";
 };
@@ -23,7 +24,7 @@ const CategoryForm = ({ initialValues, mutation }: Props) => {
 
   const onSubmit = async (data: FormValues) => {
     console.log(data);
-    await mutation.mutateAsync(data);
+    await mutation.mutateAsync({ id: initialValues?.id, ...data });
   };
 
   return (
@@ -38,7 +39,13 @@ const CategoryForm = ({ initialValues, mutation }: Props) => {
         </select>
       </div>
       <TextField label="Name" name="name" register={register} />
-      <button className="btn btn-success w-full mt-4 normal-case">Save</button>
+      <button
+        className={`${
+          isSubmitting && "loading"
+        } btn btn-success w-full mt-4 normal-case`}
+      >
+        Save
+      </button>
     </form>
   );
 };

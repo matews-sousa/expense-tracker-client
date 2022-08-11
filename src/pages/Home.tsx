@@ -2,27 +2,19 @@ import Container from "../components/Container";
 import { useAuth } from "../context/AuthProvider";
 import TransactionCard from "../components/TransactionCard";
 import useTransaction from "../hooks/useTransaction";
-import { useQuery } from "@tanstack/react-query";
-import api from "../lib/api";
-import { ICategory } from "../types/ITransaction";
 import dayjs from "dayjs";
 import localeData from "dayjs/plugin/localeData";
 import stringToColor from "string-to-color";
 import getTotalPerMonth from "../utils/getTotalPerMonth";
 import Chart from "../components/Chart";
+import useCategory from "../hooks/useCategory";
 
 dayjs.extend(localeData);
 
 const Home = () => {
   const { currentUser } = useAuth();
   const { transactions, income, expense } = useTransaction();
-  const { data: categories } = useQuery<ICategory[]>(
-    ["categories"],
-    async () => {
-      const { data } = await api.get(`/categories`);
-      return data;
-    }
-  );
+  const { categories } = useCategory();
 
   // sort by date
   const sortedTransactions = transactions?.sort((a, b) => {
@@ -84,32 +76,6 @@ const Home = () => {
             </h2>
             <Chart type="doughnut" data={pieData} />
           </div>
-          <div className="w-full bg-gray-800 rounded-md p-4 mt-4">
-            <h2 className="text-2xl font-semibold mb-4">Recent transactions</h2>
-            <table className="table w-full">
-              <thead>
-                <tr>
-                  <th>Category</th>
-                  <th>Date</th>
-                  <th>Amount</th>
-                </tr>
-              </thead>
-              <tbody>
-                {sortedTransactions
-                  ?.slice(0, sortedTransactions.length - 1)
-                  .map((transaction) => (
-                    <tr key={transaction.id}>
-                      <td>{transaction.category.name}</td>
-                      <td>{dayjs(transaction.date).format("DD/MM/YYYY")}</td>
-                      <td>
-                        {transaction.category.type === "INCOME" ? "+" : "-"}{" "}
-                        {transaction.amount}
-                      </td>
-                    </tr>
-                  ))}
-              </tbody>
-            </table>
-          </div>
         </div>
         <div className="col-span-2">
           <div className="w-full bg-gray-800 rounded-md p-4">
@@ -119,6 +85,32 @@ const Home = () => {
             <Chart type="line" data={lineData} />
           </div>
         </div>
+      </div>
+      <div className="w-full bg-gray-800 rounded-md p-4 mt-4">
+        <h2 className="text-2xl font-semibold mb-4">Recent transactions</h2>
+        <table className="table w-full">
+          <thead>
+            <tr>
+              <th>Category</th>
+              <th>Date</th>
+              <th>Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            {sortedTransactions
+              ?.slice(0, sortedTransactions.length - 1)
+              .map((transaction) => (
+                <tr key={transaction.id}>
+                  <td>{transaction.category.name}</td>
+                  <td>{dayjs(transaction.date).format("DD/MM/YYYY")}</td>
+                  <td>
+                    {transaction.category.type === "INCOME" ? "+" : "-"}{" "}
+                    {transaction.amount}
+                  </td>
+                </tr>
+              ))}
+          </tbody>
+        </table>
       </div>
     </Container>
   );

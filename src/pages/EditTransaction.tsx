@@ -16,23 +16,23 @@ const EditTransaction = () => {
     }
   );
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
   return (
     <Container>
       <h1 className="text-3xl font-bold mb-5">Edit Transaction</h1>
-      <TransactionForm
-        initialValues={{
-          transactionId: transaction.id,
-          categoryId: transaction.category.id,
-          amount: transaction.amount,
-          date: transaction.date,
-          description: transaction.description,
-        }}
-        mutation={editTransaction}
-      />
+      {isLoading ? (
+        <div>Loading...</div>
+      ) : (
+        <TransactionForm
+          initialValues={{
+            transactionId: transaction.id,
+            categoryId: transaction.category.id,
+            amount: transaction.amount,
+            date: transaction.date,
+            description: transaction.description,
+          }}
+          mutation={editTransaction}
+        />
+      )}
     </Container>
   );
 };

@@ -1,4 +1,5 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { useAuth } from "../context/AuthProvider";
 import api from "../lib/api";
 import { ITransaction } from "../types/ITransaction";
 
@@ -11,11 +12,22 @@ type FormValues = {
 };
 
 const useTransaction = () => {
+  const { authTokens, logout } = useAuth();
+  api.defaults.headers.common["Authorization"] = `Bearer ${authTokens?.access}`;
   const { data: transactions, refetch } = useQuery<ITransaction[]>(
     ["transactions"],
     async () => {
-      const { data } = await api.get("/transactions");
-      return data;
+      if (!authTokens) {
+        return [];
+      }
+      try {
+        const { data } = await api.get("/transactions");
+        return data;
+      } catch (error: any) {
+        if (error.response.statusText === "Unauthorized") {
+          logout();
+        }
+      }
     }
   );
 

@@ -27,7 +27,7 @@ const TransactionForm = ({ initialValues, mutation }: Props) => {
   const {
     register,
     handleSubmit,
-    formState: errors,
+    formState: { errors, isSubmitting },
   } = useForm({
     defaultValues: initialValues,
   });
@@ -35,7 +35,6 @@ const TransactionForm = ({ initialValues, mutation }: Props) => {
 
   const onSubmit = async (data: any) => {
     const { categoryId, amount, date, description } = data;
-    console.log(Number(categoryId), Number(amount), date, description);
     await mutation.mutateAsync({
       id: initialValues.transactionId,
       category: Number(categoryId),
@@ -74,7 +73,13 @@ const TransactionForm = ({ initialValues, mutation }: Props) => {
         name="description"
         register={register}
       />
-      <button className="btn btn-success w-full mt-4 normal-case">Save</button>
+      <button
+        className={`${
+          isSubmitting && "loading"
+        } btn btn-success w-full mt-4 normal-case`}
+      >
+        Save
+      </button>
     </form>
   );
 };
