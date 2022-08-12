@@ -20,6 +20,8 @@ const Home = () => {
   const sortedTransactions = transactions?.sort((a, b) => {
     return dayjs(a.date).isBefore(dayjs(b.date)) ? 1 : -1;
   });
+  // get last 5 transactions
+  const lastFiveTransactions = sortedTransactions?.slice(0, 5);
 
   // count the number of transactions per category
   const categoryCount = categories?.map((category) => {
@@ -65,13 +67,15 @@ const Home = () => {
   return (
     <Container>
       <h1 className="text-3xl font-bold mb-5">Welcome, {currentUser?.name}!</h1>
-      <div className="grid grid-cols-3 gap-4">
+      <section className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <TransactionCard title="Total Income" type="income" />
         <TransactionCard title="Total Expense" type="expense" />
         <TransactionCard title="Balance" type="balance" />
-        <div className="col-span-1">
-          <div className="w-full bg-gray-800 rounded-md p-4">
-            <h2 className="text-2xl font-semibold mb-4">
+      </section>
+      <section className="grid grid-cols-1 lg:grid-cols-3 lg:gap-4 mt-4">
+        <div className="col-span-1 mb-4 lg:mb-0">
+          <div className="w-full h-full bg-gray-800 rounded-md p-4">
+            <h2 className="text-lg lg:text-2xl font-semibold mb-4">
               Transactions per category
             </h2>
             <Chart type="doughnut" data={pieData} />
@@ -79,15 +83,17 @@ const Home = () => {
         </div>
         <div className="col-span-2">
           <div className="w-full bg-gray-800 rounded-md p-4">
-            <h2 className="text-2xl font-semibold mb-4">
+            <h2 className="text-lg lg:text-2xl font-semibold mb-4">
               Incomes and Expenses per month
             </h2>
             <Chart type="line" data={lineData} />
           </div>
         </div>
-      </div>
-      <div className="w-full bg-gray-800 rounded-md p-4 mt-4">
-        <h2 className="text-2xl font-semibold mb-4">Recent transactions</h2>
+      </section>
+      <section className="w-full bg-gray-800 rounded-md p-4 mt-4">
+        <h2 className="text-lg lg:text-2xl font-semibold mb-4">
+          Recent transactions
+        </h2>
         <table className="table w-full">
           <thead>
             <tr>
@@ -97,21 +103,19 @@ const Home = () => {
             </tr>
           </thead>
           <tbody>
-            {sortedTransactions
-              ?.slice(0, sortedTransactions.length - 1)
-              .map((transaction) => (
-                <tr key={transaction.id}>
-                  <td>{transaction.category.name}</td>
-                  <td>{dayjs(transaction.date).format("DD/MM/YYYY")}</td>
-                  <td>
-                    {transaction.category.type === "INCOME" ? "+" : "-"}{" "}
-                    {transaction.amount}
-                  </td>
-                </tr>
-              ))}
+            {lastFiveTransactions?.map((transaction) => (
+              <tr key={transaction.id}>
+                <td>{transaction.category.name}</td>
+                <td>{dayjs(transaction.date).format("DD/MM/YYYY")}</td>
+                <td>
+                  {transaction.category.type === "INCOME" ? "+" : "-"}{" "}
+                  {transaction.amount}
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
-      </div>
+      </section>
     </Container>
   );
 };

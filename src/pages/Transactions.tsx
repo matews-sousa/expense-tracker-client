@@ -29,97 +29,99 @@ const Transactions = () => {
 
   return (
     <Container>
-      <div className="flex justify-between mb-5">
-        <h1 className="text-3xl font-bold">Transactions</h1>
+      <div className="flex items-center justify-between mb-5">
+        <h1 className="text-xl lg:text-3xl font-bold">Transactions</h1>
         <Link
           to="/transactions/new"
-          className="btn btn-success normal-case gap-2"
+          className="btn btn-success btn-sm lg:btn-md normal-case gap-2"
         >
           <FaPlus />
           <span>New Transaction</span>
         </Link>
       </div>
-      <table className="table w-full">
-        <thead>
-          <tr>
-            <th>Category</th>
-            <th>Type</th>
-            <th>Amount</th>
-            <th>Date</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {transactions?.map((transaction) => (
-            <tr key={transaction.id}>
-              <td>{transaction.category.name}</td>
-              <td>
-                <span
-                  className={`${
-                    transaction.category.type === "INCOME"
-                      ? "bg-green-500"
-                      : "bg-red-500"
-                  }  py-1 px-2 rounded-full text-white font-semibold`}
-                >
-                  {transaction.category.type}
-                </span>
-              </td>
-              <td>
-                {transaction.category.type === "INCOME" ? "+" : "-"}{" "}
-                {transaction.amount}
-              </td>
-              <td>{dayjs(transaction.date).format("DD/MM/YYYY")}</td>
-              <td>
-                <Link
-                  to={`/transactions/${transaction.id}`}
-                  className="btn btn-ghost btn-square"
-                >
-                  <FaEdit />
-                </Link>
-
-                <button
-                  className="btn btn-ghost btn-square text-red-400"
-                  onClick={() => {
-                    setIsModalOpen(true);
-                    setSelectedTransaction(transaction);
-                  }}
-                >
-                  <FaTrash />
-                </button>
-              </td>
+      <div className="overflow-x-auto">
+        <table className="table table-compact w-full">
+          <thead>
+            <tr>
+              <th>Category</th>
+              <th>Type</th>
+              <th>Amount</th>
+              <th>Date</th>
+              <th>Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-      {selectedTransaction && (
-        <Modal
-          isOpen={isModalOpen}
-          setIsOpen={setIsModalOpen}
-          title="Delete Transaction"
-        >
-          <p className="my-2">
-            Are you sure you want to delete the transaction{" "}
-            <span className="text-red-400">
-              {selectedTransaction?.category.name}
-            </span>
-            ?
-          </p>
-          <div className="flex justify-end space-x-4 mt-4">
-            <button
-              className="btn btn-ghost"
-              onClick={() => setIsModalOpen(false)}
-            >
-              Cancel
-            </button>
-            <button
-              className="btn btn-error"
-              onClick={() => deleteTransaction.mutate(selectedTransaction.id)}
-            >
-              Delete
-            </button>
-          </div>
-        </Modal>
-      )}
+          </thead>
+          <tbody>
+            {transactions?.map((transaction) => (
+              <tr key={transaction.id}>
+                <td>{transaction.category.name}</td>
+                <td>
+                  <span
+                    className={`${
+                      transaction.category.type === "INCOME"
+                        ? "bg-green-500"
+                        : "bg-red-500"
+                    }  py-1 px-2 rounded-full text-white font-semibold`}
+                  >
+                    {transaction.category.type}
+                  </span>
+                </td>
+                <td>
+                  {transaction.category.type === "INCOME" ? "+" : "-"}{" "}
+                  {transaction.amount}
+                </td>
+                <td>{dayjs(transaction.date).format("DD/MM/YYYY")}</td>
+                <td>
+                  <Link
+                    to={`/transactions/${transaction.id}`}
+                    className="btn btn-ghost btn-square"
+                  >
+                    <FaEdit />
+                  </Link>
+
+                  <button
+                    className="btn btn-ghost btn-square text-red-400"
+                    onClick={() => {
+                      setIsModalOpen(true);
+                      setSelectedTransaction(transaction);
+                    }}
+                  >
+                    <FaTrash />
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        {selectedTransaction && (
+          <Modal
+            isOpen={isModalOpen}
+            setIsOpen={setIsModalOpen}
+            title="Delete Transaction"
+          >
+            <p className="my-2">
+              Are you sure you want to delete the transaction{" "}
+              <span className="text-red-400">
+                {selectedTransaction?.category.name}
+              </span>
+              ?
+            </p>
+            <div className="flex justify-end space-x-4 mt-4">
+              <button
+                className="btn btn-ghost"
+                onClick={() => setIsModalOpen(false)}
+              >
+                Cancel
+              </button>
+              <button
+                className="btn btn-error"
+                onClick={() => deleteTransaction.mutate(selectedTransaction.id)}
+              >
+                Delete
+              </button>
+            </div>
+          </Modal>
+        )}
+      </div>
     </Container>
   );
 };

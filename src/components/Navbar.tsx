@@ -21,11 +21,11 @@ const Navbar = () => {
   const { pathname } = useLocation();
 
   return (
-    <nav className="flex justify-between items-center max-w-7xl mx-auto py-6">
+    <nav className="flex justify-between items-center max-w-7xl mx-auto px-4 py-6">
       <Link to="/" className="text-3xl font-bold text-green-400">
         Finances
       </Link>
-      <ul className="flex items-center space-x-6">
+      <ul className="hidden lg:flex items-center space-x-6 ">
         {links.map((link) => (
           <li key={link.name}>
             <Link

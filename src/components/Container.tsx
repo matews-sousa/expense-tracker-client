@@ -1,11 +1,13 @@
 import React from "react";
+import BottomNav from "./BottomNav";
 import Navbar from "./Navbar";
 
 const Container = ({ children }: { children: React.ReactNode }) => {
   return (
     <>
       <Navbar />
-      <div className="max-w-7xl mx-auto py-12">{children}</div>
+      <BottomNav />
+      <div className="max-w-7xl mx-auto px-4 pt-12 pb-32">{children}</div>
     </>
   );
 };
