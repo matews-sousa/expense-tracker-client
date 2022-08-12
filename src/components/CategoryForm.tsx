@@ -1,5 +1,7 @@
-import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import TextField from "./TextField";
 
 type FormValues = {
@@ -13,12 +15,18 @@ interface Props {
   mutation: any;
 }
 
+const schema = z.object({
+  type: z.string().min(1, "Type is required."),
+  name: z.string().min(1, "Name is required."),
+});
+
 const CategoryForm = ({ initialValues, mutation }: Props) => {
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<FormValues>({
+    resolver: zodResolver(schema),
     defaultValues: initialValues,
   });
   const navigate = useNavigate();
@@ -38,11 +46,21 @@ const CategoryForm = ({ initialValues, mutation }: Props) => {
           <option value={"INCOME"}>Income</option>
           <option value={"EXPENSE"}>Expense</option>
         </select>
+        <label className="label">
+          <span className="label-text text-red-400">
+            {errors && errors.type && errors.type.message}
+          </span>
+        </label>
       </div>
-      <TextField label="Name" name="name" register={register} />
+      <TextField
+        label="Name"
+        name="name"
+        register={register}
+        errors={errors.name}
+      />
       <button
         className={`${
-          isSubmitting && "loading"
+          isSubmitting && "btn-disabled loading"
         } btn btn-success w-full mt-4 normal-case`}
       >
         Save

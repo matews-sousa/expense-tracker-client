@@ -1,5 +1,7 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Link, Navigate, useNavigate } from "react-router-dom";
+import { z } from "zod";
 import TextField from "../components/TextField";
 import { useAuth } from "../context/AuthProvider";
 
@@ -8,13 +10,20 @@ type FormValues = {
   password: string;
 };
 
+const schema = z.object({
+  email: z.string().min(1, "Email is required").email("Invalid email"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+});
+
 const Login = () => {
   const { currentUser, login } = useAuth();
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<FormValues>();
+  } = useForm<FormValues>({
+    resolver: zodResolver(schema),
+  });
   const navigate = useNavigate();
 
   const onSubmit = async (data: FormValues) => {
@@ -40,12 +49,14 @@ const Login = () => {
           name="email"
           type="email"
           register={register}
+          errors={errors.email}
         />
         <TextField
           label="Password"
           name="password"
           type="password"
           register={register}
+          errors={errors.password}
         />
         <button
           className={`btn btn-accent normal-case w-full mt-5 ${
