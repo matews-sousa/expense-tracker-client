@@ -5,7 +5,6 @@ import { Link, Navigate, useNavigate } from "react-router-dom";
 import TextField from "../components/TextField";
 import baseURL from "../constants/baseURL";
 import { useAuth } from "../context/AuthProvider";
-import api from "../lib/api";
 
 type FormValues = {
   name: string;
