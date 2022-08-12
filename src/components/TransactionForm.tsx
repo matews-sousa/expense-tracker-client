@@ -78,7 +78,7 @@ const TransactionForm = ({ initialValues, mutation }: Props) => {
             <label className="label">
               <span className="label-text-alt">
                 You don't have any category registred.{" "}
-                <Link to="/categories" className="link">
+                <Link to="/categories/new" className="link">
                   Create one
                 </Link>
                 .
