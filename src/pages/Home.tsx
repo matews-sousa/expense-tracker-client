@@ -24,19 +24,24 @@ const Home = () => {
   // get last 5 transactions
   const lastFiveTransactions = sortedTransactions?.slice(0, 5);
 
-  // count the number of transactions per category
-  const categoryCount = categories?.map((category) => {
-    return transactions?.filter((transaction) => {
-      return transaction.category.id === category.id;
-    }).length;
+  // count the total price of transactions per category
+  const totalPerCategory = categories?.map((category) => {
+    return transactions?.reduce((acc, transaction) => {
+      if (transaction.category.id === category.id) {
+        return acc + Number(transaction.amount);
+      } else {
+        return acc;
+      }
+    }, 0);
   });
+  console.log(totalPerCategory);
 
   const pieData = {
     labels: categories?.map((category) => category.name),
     datasets: [
       {
         label: "Transactions per category",
-        data: categoryCount,
+        data: totalPerCategory,
         backgroundColor: categories?.map((category) =>
           stringToColor(category.name)
         ),
@@ -113,7 +118,7 @@ const Home = () => {
             <div className="col-span-1 mb-4 lg:mb-0">
               <div className="w-full h-full bg-gray-800 rounded-md p-4">
                 <h2 className="text-lg lg:text-2xl font-semibold mb-4">
-                  Transactions per category
+                  Total per category
                 </h2>
                 <Chart type="doughnut" data={pieData} />
               </div>

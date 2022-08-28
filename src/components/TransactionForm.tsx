@@ -69,7 +69,7 @@ const TransactionForm = ({ initialValues, mutation }: Props) => {
           <option disabled>Pick one</option>
           {categories?.map((category) => (
             <option key={category.id} value={category.id}>
-              {category.name}
+              {category.name} - {category.type}
             </option>
           ))}
         </select>
