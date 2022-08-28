@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { useParams } from "react-router-dom";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 import CategoryForm from "../components/CategoryForm";
 import Container from "../components/Container";
 import useAxios from "../hooks/useAxios";
@@ -7,12 +7,26 @@ import useCategory from "../hooks/useCategory";
 
 const EditCategory = () => {
   const api = useAxios();
+  const navigate = useNavigate();
   const { updateCategory } = useCategory();
   const { id } = useParams();
-  const { data: category, isLoading } = useQuery(["category", id], async () => {
-    const { data } = await api.get(`/categories/${id}`);
-    return data;
-  });
+  const { data: category, isLoading } = useQuery(
+    ["category", id],
+    async () => {
+      try {
+        const { data } = await api.get(`/categories/${id}`);
+        return data;
+      } catch (error: any) {
+        console.log(error);
+        if (error.response.status === 403) {
+          navigate("/categories");
+        }
+      }
+    },
+    {
+      retry: false,
+    }
+  );
 
   return (
     <Container>

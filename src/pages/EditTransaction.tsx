@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Container from "../components/Container";
 import TransactionForm from "../components/TransactionForm";
 import useAxios from "../hooks/useAxios";
@@ -7,13 +7,21 @@ import useTransaction from "../hooks/useTransaction";
 
 const EditTransaction = () => {
   const api = useAxios();
+  const navigate = useNavigate();
   const { editTransaction } = useTransaction();
   const { id } = useParams();
   const { data: transaction, isLoading } = useQuery(
     ["transaction", id],
     async () => {
-      const { data } = await api.get(`/transactions/${id}`);
-      return data;
+      try {
+        const { data } = await api.get(`/transactions/${id}`);
+        return data;
+      } catch (error: any) {
+        console.log(error);
+        if (error.response.status === 403) {
+          navigate("/transactions");
+        }
+      }
     }
   );
 
