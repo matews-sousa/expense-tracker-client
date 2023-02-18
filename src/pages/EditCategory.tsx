@@ -2,11 +2,10 @@ import { useQuery } from "@tanstack/react-query";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import CategoryForm from "../components/CategoryForm";
 import Container from "../components/Container";
-import useAxios from "../hooks/useAxios";
 import useCategory from "../hooks/useCategory";
+import api from "../lib/axios";
 
 const EditCategory = () => {
-  const api = useAxios();
   const navigate = useNavigate();
   const { updateCategory } = useCategory();
   const { id } = useParams();

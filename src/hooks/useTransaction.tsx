@@ -1,17 +1,16 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
+import api from "../lib/axios";
 import { ITransaction } from "../types/ITransaction";
-import useAxios from "./useAxios";
 
 type FormValues = {
   id: number;
-  category: number;
+  category_id: number;
   amount: number;
   date: string;
   description: string;
 };
 
 const useTransaction = () => {
-  const api = useAxios();
   const { data: transactions, refetch } = useQuery<ITransaction[]>(
     ["transactions"],
     async () => {

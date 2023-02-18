@@ -7,10 +7,9 @@ import Modal from "../components/Modal";
 import useTransaction from "../hooks/useTransaction";
 import { ITransaction } from "../types/ITransaction";
 import dayjs from "dayjs";
-import useAxios from "../hooks/useAxios";
+import api from "../lib/axios";
 
 const Transactions = () => {
-  const api = useAxios();
   const { transactions, refetch } = useTransaction();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedTransaction, setSelectedTransaction] =

@@ -10,7 +10,7 @@ const NewTransaction = () => {
       <h1 className="text-3xl font-bold mb-5">New Transaction</h1>
       <TransactionForm
         initialValues={{
-          categoryId: "",
+          category_id: "",
           amount: "",
           date: new Date().toISOString().split("T")[0],
           description: "",

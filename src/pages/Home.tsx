@@ -34,7 +34,6 @@ const Home = () => {
       }
     }, 0);
   });
-  console.log(totalPerCategory);
 
   const pieData = {
     labels: categories?.map((category) => category.name),

@@ -8,7 +8,7 @@ import TextField from "./TextField";
 interface Props {
   initialValues: {
     transactionId?: number;
-    categoryId: number | string;
+    category_id: number | string;
     amount: number | string;
     date: string;
     description: string;
@@ -17,7 +17,7 @@ interface Props {
 }
 
 const schema = z.object({
-  categoryId: z
+  category_id: z
     .string()
     .min(1, "Category is required.")
     .transform((val) => parseInt(val)),
@@ -42,10 +42,10 @@ const TransactionForm = ({ initialValues, mutation }: Props) => {
   const navigate = useNavigate();
 
   const onSubmit = async (data: any) => {
-    const { categoryId, amount, date, description } = data;
+    const { category_id, amount, date, description } = data;
     await mutation.mutateAsync({
       id: initialValues.transactionId,
-      category: categoryId,
+      category_id,
       amount,
       date,
       description,
@@ -61,10 +61,10 @@ const TransactionForm = ({ initialValues, mutation }: Props) => {
         </label>
         <select
           className={`select select-bordered ${
-            errors.categoryId && "select-error"
+            errors.category_id && "select-error"
           }`}
           disabled={!categories || categories?.length === 0}
-          {...register("categoryId")}
+          {...register("category_id")}
         >
           <option disabled>Pick one</option>
           {categories?.map((category) => (
@@ -87,7 +87,7 @@ const TransactionForm = ({ initialValues, mutation }: Props) => {
           ))}
         <label className="label">
           <span className="label-text-alt text-red-400">
-            {errors && errors.categoryId && errors.categoryId.message}
+            {errors && errors.category_id && errors.category_id.message}
           </span>
         </label>
       </div>

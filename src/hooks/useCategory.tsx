@@ -1,9 +1,8 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
+import api from "../lib/axios";
 import { ICategory } from "../types/ITransaction";
-import useAxios from "./useAxios";
 
 const useCategory = () => {
-  const api = useAxios();
   const { data: categories, refetch } = useQuery<ICategory[]>(
     ["categories"],
     async () => {

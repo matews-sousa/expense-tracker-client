@@ -2,11 +2,10 @@ import { useQuery } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import Container from "../components/Container";
 import TransactionForm from "../components/TransactionForm";
-import useAxios from "../hooks/useAxios";
 import useTransaction from "../hooks/useTransaction";
+import api from "../lib/axios";
 
 const EditTransaction = () => {
-  const api = useAxios();
   const navigate = useNavigate();
   const { editTransaction } = useTransaction();
   const { id } = useParams();
@@ -34,7 +33,7 @@ const EditTransaction = () => {
         <TransactionForm
           initialValues={{
             transactionId: transaction.id,
-            categoryId: transaction.category.id,
+            category_id: transaction.category.id,
             amount: transaction.amount,
             date: transaction.date,
             description: transaction.description,

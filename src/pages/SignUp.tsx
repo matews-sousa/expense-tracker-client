@@ -1,27 +1,23 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
 import { useForm } from "react-hook-form";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { z } from "zod";
 import TextField from "../components/TextField";
-import baseURL from "../constants/baseURL";
 import { useAuth } from "../context/AuthProvider";
-
-type FormValues = {
-  name: string;
-  email: string;
-  password: string;
-};
+import axios from "axios";
 
 const schema = z.object({
   name: z.string().min(1, "Name is required."),
   email: z.string().min(1, "Email is required").email("Invalid email"),
   password: z.string().min(6, "Password must be at least 6 characters"),
+  password_confirmation: z.string().min(6, "Password must be at least 6 characters"),
 });
 
+type FormValues = z.infer<typeof schema>;
+
 const SignUp = () => {
-  const { currentUser } = useAuth();
+  const { currentUser, setCurrentUser, setToken } = useAuth();
   const {
     register,
     handleSubmit,
@@ -30,16 +26,19 @@ const SignUp = () => {
     resolver: zodResolver(schema),
   });
   const mutation = useMutation(
-    (newUser: { name: string; email: string; password: string }) => {
-      return axios.post(`${baseURL}/signup`, newUser);
+    (newUser: { name: string; email: string; password: string, password_confirmation: string }) => {
+      return axios.post(`${import.meta.env.VITE_BASE_API_URL}/register`, newUser);
     }
   );
   const navigate = useNavigate();
 
-  const onSubmit = async (data: FormValues) => {
+  const onSubmit = async (_data: FormValues) => {
     try {
-      await mutation.mutateAsync(data);
-      navigate("/login");
+      const {data} = await mutation.mutateAsync(_data);
+      localStorage.setItem("ACCESS_TOKEN", data.token);
+      setToken(data.token);
+      setCurrentUser(data.user);
+      navigate("/");
     } catch (error) {
       console.log(error);
     }
@@ -72,6 +71,13 @@ const SignUp = () => {
           type="password"
           register={register}
           errors={errors.password}
+        />
+        <TextField
+          label="Password Confirm"
+          name="password_confirmation"
+          type="password"
+          register={register}
+          errors={errors.password_confirmation}
         />
         <button
           className={`btn btn-accent normal-case w-full mt-5 ${
